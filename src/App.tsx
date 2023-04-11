@@ -3,8 +3,13 @@ import './App.css';
 import { useState } from 'react';
 import { fetchTracks } from './lib/fetchTracks';
 import { useQuery } from '@tanstack/react-query';
+import { SavedTrack } from 'spotify-types';
 const App = () => {
-  const { data: tracks } = useQuery({
+  const {
+    data: tracks,
+    isSuccess,
+    isLoading,
+  } = useQuery({
     queryKey: ['tracks'],
     queryFn: fetchTracks,
   });
@@ -21,6 +26,15 @@ const App = () => {
     'https://p.scdn.co/mp3-preview/0f6b8a3524ec410020457da4cdd7717f9addce2f',
     'https://p.scdn.co/mp3-preview/ac28d1b0be285ed3bfd8e9fa5fad133776d7cf36',
   ];
+
+  if (isLoading) {
+    return <h3>Veuillez patienter ???</h3>;
+  }
+
+  if (!isSuccess) {
+    return <p>Une erreur est survenu !!!</p>;
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -28,14 +42,13 @@ const App = () => {
         <h1 className="App-title">Bienvenue sur le blind test</h1>
       </header>
       <div className="App-images">
-        <audio src={trackUrls[4]} autoPlay controls />
+        <audio src={tracks[trackIndex]?.track.preview_url} autoPlay controls />
+        <h1>{tracks[trackIndex]?.track.name}</h1>
         <button onClick={goToNextTrack}>Next track</button>
       </div>
       <div className="App-buttons">a</div>
     </div>
   );
 };
-
-console.log(fetchTracks)
 
 export default App;
