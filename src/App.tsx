@@ -36,4 +36,6 @@ const App = () => {
   );
 };
 
+console.log(fetchTracks)
+
 export default App;
